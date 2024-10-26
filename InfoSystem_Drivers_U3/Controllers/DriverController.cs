@@ -1,12 +1,10 @@
-﻿using InfoSystem_Drivers_U3.Models;
+﻿using InfoSystem_Drivers_U3.Data;
+using InfoSystem_Drivers_U3.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using U3_Infosystem_ASP.NET.Data;
 
-
-namespace U3_Infosystem_ASP.NET.Controllers
+namespace InfoSystem_Drivers_U3.Controllers
 {
     [Authorize]
     public class DriverController : Controller

@@ -1,24 +1,23 @@
-﻿@model IEnumerable<U3_Infosystem_ASP.NET.Models.Event>
-@{
-    ViewData["Title"] = "Händelser för " + ViewBag.DriverName;
-}
+﻿@model IEnumerable<InfoSystem_Drivers_U3.Models.Event>
 
-<h2>Händelser för @ViewBag.DriverName</h2>
+<h2>Händelser för förare</h2>
 
+<!-- Datumfilter formulär -->
 <form method="get" asp-action="Index">
     <input type="hidden" name="driverId" value="@ViewBag.DriverId" />
 
     <div>
         <label for="startDate">Från:</label>
-        <input type="date" name="startDate" value="@Request.Query["startDate"]" />
+        <input type="date" name="startDate" value="@ViewBag.StartDate" />
 
         <label for="endDate">Till:</label>
-        <input type="date" name="endDate" value="@Request.Query["endDate"]" />
+        <input type="date" name="endDate" value="@ViewBag.EndDate" />
 
         <button type="submit" class="btn btn-primary">Filtrera</button>
     </div>
 </form>
 
+<!-- Tabell för att visa filtrerade händelser -->
 <table class="table">
     <tr>
         <th>Datum</th>

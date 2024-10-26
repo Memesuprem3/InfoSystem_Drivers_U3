@@ -5,48 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - InfoSystem_Drivers_U3</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/InfoSystem_Drivers_U3.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InfoSystem_Drivers_U3</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    <header class="bg-light border-bottom mb-3">
+        <div class="container-fluid d-flex justify-content-between align-items-center py-2">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <h1 style="font-size: 1.5rem; margin: 0; color: #0044cc;">InfoSystem_Drivers_U3</h1>
+            </a>
+
+            <div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-action="Logout" asp-controller="Employee" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-link">Logga ut</button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn btn-link" asp-controller="Employee" asp-action="Login">Logga in</a>
+                }
             </div>
-        </nav>
-        @if (User.Identity.IsAuthenticated)
-        {
-            <form asp-action="Logout" asp-controller="Employee" method="post">
-                <button type="submit">Logga ut</button>
-            </form>
-        }
+        </div>
     </header>
+
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <!-- Dynamisk länk till översikt för inloggade användare -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="nav-link text-dark" asp-controller="Employee" asp-action="AdminOverview">Översikt</a>
+                            }
+                            else if (User.IsInRole("Employee"))
+                            {
+                                <a class="nav-link text-dark" asp-controller="Employee" asp-action="DriverOverview">Översikt</a>
+                            }
+                        </li>
+                    }
+
+                    @* <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Hem</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Integritetspolicy</a>
+                    </li> *@
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-center text-muted py-3">
         <div class="container">
-            &copy; 2024 - InfoSystem_Drivers_U3 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - InfoSystem_Drivers_U3 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Integritetspolicy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,9 +1,7 @@
 ﻿using InfoSystem_Drivers_U3.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
-
-namespace U3_Infosystem_ASP.NET.Data
+namespace InfoSystem_Drivers_U3.Data
 {
     public class AppDbContext : DbContext
     {

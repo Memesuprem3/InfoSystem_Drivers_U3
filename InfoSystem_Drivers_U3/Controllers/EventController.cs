@@ -1,14 +1,12 @@
-﻿using InfoSystem_Drivers_U3.Models;
+﻿using InfoSystem_Drivers_U3.Data;
+using InfoSystem_Drivers_U3.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using U3_Infosystem_ASP.NET.Data;
 
-
-namespace U3_Infosystem_ASP.NET.Controllers
+namespace InfoSystem_Drivers_U3.Controllers
 {
-    [Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Admin, Employee")]
     public class EventController : Controller
     {
         private readonly AppDbContext _context;
@@ -40,6 +38,10 @@ namespace U3_Infosystem_ASP.NET.Controllers
             {
                 events = events.Where(e => e.NoteDate <= endDate.Value);
             }
+
+            // Sätt värden till ViewBag så de kan användas i vyn
+            ViewBag.StartDate = startDate?.ToString("yyyy-MM-dd");
+            ViewBag.EndDate = endDate?.ToString("yyyy-MM-dd");
 
             ViewBag.DriverName = driver.DriverName;
             ViewBag.DriverId = driver.DriverID;
@@ -154,7 +156,7 @@ namespace U3_Infosystem_ASP.NET.Controllers
             return RedirectToAction("Index", new { driverId = driverId });
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> GetNotifications()
         {
             // Dynamiskt tidsspann beroende på roll

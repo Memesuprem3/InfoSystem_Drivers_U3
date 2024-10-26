@@ -1,6 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Login";
-}
+﻿@model InfoSystem_Drivers_U3.Models.Employee
 
 <h2>Logga in</h2>
 
@@ -17,9 +15,8 @@
 </form>
 
 @if (ViewBag.ErrorMessage != null)
-
 {
-        <div style="color: red;">
-            <p>@ViewBag.ErrorMessage</p>
-        </div>
+    <div style="color: red;">
+        <p>@ViewBag.ErrorMessage</p>
+    </div>
 }

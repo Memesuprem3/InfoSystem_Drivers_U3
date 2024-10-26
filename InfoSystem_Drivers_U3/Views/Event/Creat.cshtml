@@ -1,13 +1,8 @@
-﻿@model U3_Infosystem_ASP.NET.Models.Event
-@{
-    ViewData["Title"] = "Lägg till Händelse";
-}
+﻿@model InfoSystem_Drivers_U3.Models.Event
 
 <h2>Lägg till ny händelse</h2>
 
 <form asp-action="Create" method="post">
-    <input type="hidden" name="driverId" value="@ViewBag.DriverId" />
-
     <div>
         <label for="NoteDate">Datum</label>
         <input asp-for="NoteDate" class="form-control" type="date" />

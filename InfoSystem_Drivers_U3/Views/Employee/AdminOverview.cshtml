@@ -4,6 +4,12 @@
 
 <h2>Admin Översikt</h2>
 
-<p>Välkommen till Admin-översikten. Här kan du hantera systemet.</p>
+<p>Välkommen, @User.Identity.Name!</p>
 
-<a asp-controller="Event" asp-action="GetNotifications" class="btn btn-info">Visa Notifieringar</a>
+<p>Här kan du hantera systemets användare, förare och händelser.</p>
+
+<div class="list-group mt-4">
+    <a href="~/Employee/Index" class="list-group-item list-group-item-action">Hantera Anställda</a>
+    <a href="~/Driver/Index" class="list-group-item list-group-item-action">Hantera Förare</a>
+    <a href="~/Event/GetNotifications" class="list-group-item list-group-item-action">Visa Notifikationer</a>
+</div>

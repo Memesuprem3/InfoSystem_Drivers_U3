@@ -1,7 +1,4 @@
-﻿@model IEnumerable<U3_Infosystem_ASP.NET.Models.Event>
-@{
-    ViewData["Title"] = "Senaste Händelser";
-}
+﻿@model IEnumerable<InfoSystem_Drivers_U3.Models.Event>
 
 <h2>Notifieringar - Senaste Händelser</h2>
 
@@ -25,4 +22,14 @@
     }
 </table>
 
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Tillbaka till Översikt</a>
+
+<div class="mt-3">
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Employee" asp-action="AdminOverview" class="btn btn-secondary">Tillbaka till Admin Översikt</a>
+    }
+    else if (User.IsInRole("Employee"))
+    {
+        <a asp-controller="Employee" asp-action="DriverOverview" class="btn btn-secondary">Tillbaka till Employee Översikt</a>
+    }
+</div>

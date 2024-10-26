@@ -4,6 +4,11 @@
 
 <h2>Employee Översikt</h2>
 
-<p>Välkommen till Employee-översikten. Här kan du hantera förare och händelser.</p>
+<p>Välkommen, @User.Identity.Name!</p>
 
-<a asp-controller="Event" asp-action="GetNotifications" class="btn btn-info">Visa Notifieringar</a>
+<p>Här kan du hantera förare och deras händelser.</p>
+
+<div class="list-group mt-4">
+    <a href="~/Driver/Index" class="list-group-item list-group-item-action">Visa och Hantera Förare</a>
+    <a href="~/Event/GetNotifications" class="list-group-item list-group-item-action">Visa Senaste Notifikationer</a>
+</div>

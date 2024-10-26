@@ -1,7 +1,4 @@
-﻿@model U3_Infosystem_ASP.NET.Models.Driver
-@{
-    ViewData["Title"] = "Ta bort Förare";
-}
+﻿@model InfoSystem_Drivers_U3.Models.Driver
 
 <h2>Ta bort förare</h2>
 
@@ -13,7 +10,7 @@
     <p>Ansvarig Anställd: @Model.ResponsibleEmployee</p>
 </div>
 
-<form asp-action="DeleteConfirmed" method="post">
+<form asp-action="Delete" method="post">
     <input type="hidden" asp-for="DriverID" />
     <button type="submit" class="btn btn-danger">Ja, ta bort</button>
     <a asp-action="Index" class="btn btn-secondary">Avbryt</a>

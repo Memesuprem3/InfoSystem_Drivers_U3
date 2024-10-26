@@ -1,15 +1,13 @@
-﻿using InfoSystem_Drivers_U3.Models;
+﻿using InfoSystem_Drivers_U3.Data;
+using InfoSystem_Drivers_U3.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using U3_Infosystem_ASP.NET.Data;
 
-
-namespace U3_Infosystem_ASP.NET.Controllers
+namespace InfoSystem_Drivers_U3.Controllers
 {
     public class EmployeeController : Controller
     {
