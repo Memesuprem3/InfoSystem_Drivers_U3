@@ -1,0 +1,21 @@
+﻿@model U3_Infosystem_ASP.NET.Models.Event
+@{
+    ViewData["Title"] = "Ta bort Händelse";
+}
+
+<h2>Ta bort händelse</h2>
+
+<p>Är du säker på att du vill ta bort denna händelse?</p>
+
+<div>
+    <p>Datum: @Model.NoteDate.ToShortDateString()</p>
+    <p>Beskrivning: @Model.NoteDescription</p>
+    <p>Belopp In: @Model.BeloppIn</p>
+    <p>Belopp Ut: @Model.BeloppUt</p>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="EventID" />
+    <button type="submit" class="btn btn-danger">Ja, ta bort</button>
+    <a asp-action="Index" asp-route-driverId="@Model.DriverID" class="btn btn-secondary">Avbryt</a>
+</form>

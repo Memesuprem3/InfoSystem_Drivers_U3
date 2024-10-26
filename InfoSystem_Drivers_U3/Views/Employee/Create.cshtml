@@ -1,0 +1,26 @@
+﻿@model U3_Infosystem_ASP.NET.Models.Employee
+@{
+    ViewData["Title"] = "Lägg till Anställd";
+}
+
+<h2>Lägg till ny anställd</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label for="Name">Namn</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div>
+        <label for="Email">E-post</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div>
+        <label for="Password">Lösenord</label>
+        <input asp-for="Password" class="form-control" type="password" />
+    </div>
+    <div>
+        <label for="Role">Roll</label>
+        <input asp-for="Role" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Spara</button>
+</form>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<U3_Infosystem_ASP.NET.Models.Event>
+@{
+    ViewData["Title"] = "Händelser för " + ViewBag.DriverName;
+}
+
+<h2>Händelser för @ViewBag.DriverName</h2>
+
+<form method="get" asp-action="Index">
+    <input type="hidden" name="driverId" value="@ViewBag.DriverId" />
+
+    <div>
+        <label for="startDate">Från:</label>
+        <input type="date" name="startDate" value="@Request.Query["startDate"]" />
+
+        <label for="endDate">Till:</label>
+        <input type="date" name="endDate" value="@Request.Query["endDate"]" />
+
+        <button type="submit" class="btn btn-primary">Filtrera</button>
+    </div>
+</form>
+
+<table class="table">
+    <tr>
+        <th>Datum</th>
+        <th>Beskrivning</th>
+        <th>Belopp In</th>
+        <th>Belopp Ut</th>
+        <th>Åtgärder</th>
+    </tr>
+    @foreach (var eventItem in Model)
+    {
+        <tr>
+            <td>@eventItem.NoteDate.ToShortDateString()</td>
+            <td>@eventItem.NoteDescription</td>
+            <td>@eventItem.BeloppIn</td>
+            <td>@eventItem.BeloppUt</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@eventItem.EventID">Redigera</a> |
+                <a asp-action="Delete" asp-route-id="@eventItem.EventID">Ta bort</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<a asp-action="Create" asp-route-driverId="@ViewBag.DriverId" class="btn btn-primary">Lägg till ny händelse</a>
+<a asp-controller="Driver" asp-action="Index" class="btn btn-secondary">Tillbaka till Förarlistan</a>

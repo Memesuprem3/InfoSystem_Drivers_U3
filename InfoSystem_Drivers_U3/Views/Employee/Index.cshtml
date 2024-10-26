@@ -1,0 +1,29 @@
+﻿@model IEnumerable<U3_Infosystem_ASP.NET.Models.Employee>
+@{
+    ViewData["Title"] = "Anställda";
+}
+
+<h2>Anställda</h2>
+
+<table class="table">
+    <tr>
+        <th>Namn</th>
+        <th>E-post</th>
+        <th>Roll</th>
+        <th>Åtgärder</th>
+    </tr>
+    @foreach (var employee in Model)
+    {
+        <tr>
+            <td>@employee.Name</td>
+            <td>@employee.Email</td>
+            <td>@employee.Role</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@employee.EmployeeID">Redigera</a> |
+                <a asp-action="Delete" asp-route-id="@employee.EmployeeID">Ta bort</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Lägg till ny anställd</a>

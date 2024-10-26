@@ -1,0 +1,20 @@
+﻿@model U3_Infosystem_ASP.NET.Models.Driver
+@{
+    ViewData["Title"] = "Ta bort Förare";
+}
+
+<h2>Ta bort förare</h2>
+
+<p>Är du säker på att du vill ta bort denna förare?</p>
+
+<div>
+    <h4>@Model.DriverName</h4>
+    <p>Registreringsnummer: @Model.CarReg</p>
+    <p>Ansvarig Anställd: @Model.ResponsibleEmployee</p>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="DriverID" />
+    <button type="submit" class="btn btn-danger">Ja, ta bort</button>
+    <a asp-action="Index" class="btn btn-secondary">Avbryt</a>
+</form>

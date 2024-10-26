@@ -1,0 +1,20 @@
+﻿@model U3_Infosystem_ASP.NET.Models.Employee
+@{
+    ViewData["Title"] = "Ta bort Anställd";
+}
+
+<h2>Ta bort anställd</h2>
+
+<p>Är du säker på att du vill ta bort denna anställd?</p>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>E-post: @Model.Email</p>
+    <p>Roll: @Model.Role</p>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="EmployeeID" />
+    <button type="submit" class="btn btn-danger">Ja, ta bort</button>
+    <a asp-action="Index" class="btn btn-secondary">Avbryt</a>
+</form>

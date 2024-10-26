@@ -1,0 +1,29 @@
+﻿@model IEnumerable<U3_Infosystem_ASP.NET.Models.Driver>
+@{
+    ViewData["Title"] = "Förarlista";
+}
+
+<h2>Alla Förare</h2>
+
+<table class="table">
+    <tr>
+        <th>Namn</th>
+        <th>Registreringsnummer</th>
+        <th>Ansvarig Anställd</th>
+        <th>Åtgärder</th>
+    </tr>
+    @foreach (var driver in Model)
+    {
+        <tr>
+            <td>@driver.DriverName</td>
+            <td>@driver.CarReg</td>
+            <td>@driver.ResponsibleEmployee</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@driver.DriverID">Redigera</a> |
+                <a asp-action="Delete" asp-route-id="@driver.DriverID">Ta bort</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Lägg till ny förare</a>

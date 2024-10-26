@@ -1,0 +1,22 @@
+﻿@model U3_Infosystem_ASP.NET.Models.Driver
+@{
+    ViewData["Title"] = "Lägg till Förare";
+}
+
+<h2>Lägg till ny förare</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label for="DriverName">Namn</label>
+        <input asp-for="DriverName" class="form-control" />
+    </div>
+    <div>
+        <label for="CarReg">Registreringsnummer</label>
+        <input asp-for="CarReg" class="form-control" />
+    </div>
+    <div>
+        <label for="ResponsibleEmployee">Ansvarig Anställd</label>
+        <input asp-for="ResponsibleEmployee" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Spara</button>
+</form>

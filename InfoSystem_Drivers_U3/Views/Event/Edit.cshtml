@@ -1,0 +1,29 @@
+﻿@model U3_Infosystem_ASP.NET.Models.Event
+@{
+    ViewData["Title"] = "Redigera Händelse";
+}
+
+<h2>Redigera händelse</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="EventID" />
+    <input type="hidden" asp-for="DriverID" />
+
+    <div>
+        <label for="NoteDate">Datum</label>
+        <input asp-for="NoteDate" class="form-control" type="date" />
+    </div>
+    <div>
+        <label for="NoteDescription">Beskrivning</label>
+        <textarea asp-for="NoteDescription" class="form-control"></textarea>
+    </div>
+    <div>
+        <label for="BeloppIn">Belopp In</label>
+        <input asp-for="BeloppIn" class="form-control" />
+    </div>
+    <div>
+        <label for="BeloppUt">Belopp Ut</label>
+        <input asp-for="BeloppUt" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Spara ändringar</button>
+</form>

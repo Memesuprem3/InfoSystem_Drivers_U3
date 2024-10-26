@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using InfoSystem_Drivers_U3.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,17 @@ namespace U3_Infosystem_ASP.NET.Controllers
             _context = context;
         }
 
-        // GET: Employee/Login
+        // Login-related actions
+
+        // GET: Employee/Login – Visa inloggningsformulär
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: Employee/Login
+        // POST: Employee/Login – Hantera inloggningslogik
+        [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
             var employee = await _context.Employees
@@ -38,12 +42,11 @@ namespace U3_Infosystem_ASP.NET.Controllers
                 return View();
             }
 
-            // Skapa claims baserat på roll
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, employee.Name),
-        new Claim(ClaimTypes.Role, employee.Role)
-    };
+            {
+                new Claim(ClaimTypes.Name, employee.Name),
+                new Claim(ClaimTypes.Role, employee.Role)
+            };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -53,7 +56,7 @@ namespace U3_Infosystem_ASP.NET.Controllers
                 : RedirectToAction("DriverOverview");
         }
 
-        // GET: Employee/Logout
+        // GET: Employee/Logout – Hantera utloggning
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -61,17 +64,132 @@ namespace U3_Infosystem_ASP.NET.Controllers
             return RedirectToAction("Login");
         }
 
-        // Exempelmetoder för Admin- och Employee-vyer
+        // Admin-related CRUD actions for Employee
+
+        // GET: Employee/Index – Lista alla anställda (Admin only)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index()
+        {
+            var employees = await _context.Employees.ToListAsync();
+            return View(employees);
+        }
+
+        // GET: Employee/Create – Visa formulär för att skapa ny anställd
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Employee/Create – Lägg till ny anställd i databasen
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(employee);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(employee);
+        }
+
+        // GET: Employee/Edit/5 – Visa formulär för att redigera anställd
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        // POST: Employee/Edit/5 – Uppdatera anställd i databasen
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Employee employee)
+        {
+            if (id != employee.EmployeeID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(employee);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Employees.Any(e => e.EmployeeID == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(employee);
+        }
+
+        // GET: Employee/Delete/5 – Visa bekräftelse för att ta bort anställd
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(e => e.EmployeeID == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
+
+        // POST: Employee/Delete/5 – Ta bort anställd från databasen
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Employee/AdminOverview – Visar Admin-översikt
         [Authorize(Roles = "Admin")]
         public IActionResult AdminOverview()
         {
-            return View(); // Sidan för Admin-översikt
+            return View(); // Implementera Admin översiktssidan här
         }
 
+        // GET: Employee/DriverOverview – Visar Employee-funktionalitet för förare
         [Authorize(Roles = "Employee")]
         public IActionResult DriverOverview()
         {
-            return View(); // Sidan för hantering av förare och händelser
+            return View(); // Implementera Driver hanteringssidan här
         }
     }
 }
