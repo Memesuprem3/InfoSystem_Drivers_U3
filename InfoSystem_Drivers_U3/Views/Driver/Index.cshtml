@@ -2,25 +2,40 @@
 
 <h2>Förare</h2>
 
-<table class="table">
-    <tr>
-        <th>Namn</th>
-        <th>Registreringsnummer</th>
-        <th>Ansvarig Anställd</th>
-        <th>Åtgärder</th>
-    </tr>
-    @foreach (var driver in Model)
-    {
-        <tr>
-            <td>@driver.DriverName</td>
-            <td>@driver.CarReg</td>
-            <td>@driver.ResponsibleEmployee</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@driver.DriverID">Redigera</a> |
-                <a asp-action="Delete" asp-route-id="@driver.DriverID">Ta bort</a>
-            </td>
-        </tr>
-    }
-</table>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Sökformulär -->
+    <form method="get" asp-action="Index" class="form-inline">
+        <div class="form-group">
+            <input type="text" name="searchString" class="form-control" placeholder="Sök efter förarnamn" />
+            <button type="submit" class="btn btn-primary ml-2">Sök</button>
+        </div>
+    </form>
 
-<a asp-action="Create" class="btn btn-primary">Lägg till ny förare</a>
+    <!-- Lägg till förare-knapp -->
+    <a asp-action="Create" class="btn btn-success">Lägg till ny förare</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Namn</th>
+            <th>Registreringsnummer</th>
+            <th>Ansvarig</th>
+            <th>Åtgärder</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var driver in Model)
+        {
+            <tr>
+                <td>@driver.DriverName</td>
+                <td>@driver.CarReg</td>
+                <td>@driver.ResponsibleEmployee</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@driver.DriverID" class="btn btn-warning">Redigera</a>
+                    <a asp-action="Delete" asp-route-id="@driver.DriverID" class="btn btn-danger">Ta bort</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

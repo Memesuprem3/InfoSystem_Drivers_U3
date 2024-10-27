@@ -1,0 +1,32 @@
+﻿@model InfoSystem_Drivers_U3.Models.Driver
+
+<h2>Historik för @Model.DriverName</h2>
+
+<p>Registreringsnummer: @Model.CarReg</p>
+<p>Ansvarig: @Model.ResponsibleEmployee</p>
+
+<h3>Händelser</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Beskrivning</th>
+            <th>Belopp In</th>
+            <th>Belopp Ut</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var eventItem in Model.Events)
+        {
+            <tr>
+                <td>@eventItem.NoteDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@eventItem.NoteDescription</td>
+                <td>@eventItem.BeloppIn</td>
+                <td>@eventItem.BeloppUt</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Tillbaka till förare</a>

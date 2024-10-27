@@ -157,19 +157,37 @@ namespace InfoSystem_Drivers_U3.Controllers
         }
 
         [Authorize(Roles = "Admin, Employee")]
-        public async Task<IActionResult> GetNotifications()
+        public async Task<IActionResult> GetNotifications(string driverName, string employeeName, DateTime? startDate, DateTime? endDate)
         {
-            // Dynamiskt tidsspann beroende på roll
-            TimeSpan timeSpan = User.IsInRole("Admin") ? TimeSpan.FromHours(24) : TimeSpan.FromHours(12);
+            // Ändra timespan till 7 dagar (1 vecka)
+            TimeSpan timeSpan = TimeSpan.FromDays(7);
             DateTime cutoffTime = DateTime.Now.Subtract(timeSpan);
 
-            // Hämta händelser från de senaste timmarna
-            var recentEvents = await _context.Events
-                .Where(e => e.NoteDate >= cutoffTime)
+            var events = _context.Events
                 .Include(e => e.Driver)
-                .ToListAsync();
+                .Where(e => e.NoteDate >= cutoffTime);
 
-            return View(recentEvents);
+            if (!string.IsNullOrEmpty(driverName))
+            {
+                events = events.Where(e => e.Driver.DriverName.Contains(driverName));
+            }
+
+            if (!string.IsNullOrEmpty(employeeName))
+            {
+                events = events.Where(e => e.Driver.ResponsibleEmployee.Contains(employeeName));
+            }
+
+            if (startDate.HasValue)
+            {
+                events = events.Where(e => e.NoteDate >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                events = events.Where(e => e.NoteDate <= endDate.Value);
+            }
+
+            return View(await events.ToListAsync());
         }
 
     }

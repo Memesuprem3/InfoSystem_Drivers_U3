@@ -2,7 +2,6 @@ using InfoSystem_Drivers_U3.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace InfoSystem_Drivers_U3
 {
     public class Program
@@ -10,6 +9,9 @@ namespace InfoSystem_Drivers_U3
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Load environment setting from appsettings.json
+            var environmentSetting = builder.Configuration.GetValue<string>("Environment") ?? "Production";
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -20,14 +22,18 @@ namespace InfoSystem_Drivers_U3
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Employee/Login"; // Set login path
-                    options.AccessDeniedPath = "/Employee/AccessDenied"; // Optional: Set access denied path
+                    options.LoginPath = "/Employee/Login";
+                    options.AccessDeniedPath = "/Employee/AccessDenied";
                 });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            // Configure the HTTP request pipeline based on the environment setting
+            if (environmentSetting == "Development")
+            {
+                app.UseDeveloperExceptionPage(); // Show detailed error pages in Development
+            }
+            else
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();

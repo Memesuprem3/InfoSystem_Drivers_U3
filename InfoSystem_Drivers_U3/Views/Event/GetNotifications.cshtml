@@ -2,24 +2,45 @@
 
 <h2>Notifieringar - Senaste Händelser</h2>
 
-<table class="table">
-    <tr>
-        <th>Förare</th>
-        <th>Datum</th>
-        <th>Beskrivning</th>
-        <th>Belopp In</th>
-        <th>Belopp Ut</th>
-    </tr>
-    @foreach (var eventItem in Model)
-    {
+<form method="get" asp-action="GetNotifications">
+    <div class="form-row">
+        <div class="col">
+            <input type="text" name="driverName" class="form-control" placeholder="Förares namn" />
+        </div>
+        <div class="col">
+            <input type="date" name="startDate" class="form-control" />
+        </div>
+        <div class="col">
+            <input type="date" name="endDate" class="form-control" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Filtrera</button>
+        </div>
+    </div>
+</form>
+
+<table class="table mt-4">
+    <thead>
         <tr>
-            <td>@eventItem.Driver.DriverName</td>
-            <td>@eventItem.NoteDate.ToString("yyyy-MM-dd HH:mm")</td>
-            <td>@eventItem.NoteDescription</td>
-            <td>@eventItem.BeloppIn</td>
-            <td>@eventItem.BeloppUt</td>
+            <th>Förare</th>
+            <th>Datum</th>
+            <th>Beskrivning</th>
+            <th>Belopp In</th>
+            <th>Belopp Ut</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var eventItem in Model)
+        {
+            <tr>
+                <td>@eventItem.Driver.DriverName</td>
+                <td>@eventItem.NoteDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@eventItem.NoteDescription</td>
+                <td>@eventItem.BeloppIn</td>
+                <td>@eventItem.BeloppUt</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 

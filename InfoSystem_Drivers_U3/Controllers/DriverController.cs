@@ -17,10 +17,18 @@ namespace InfoSystem_Drivers_U3.Controllers
         }
 
         // GET: Driver/Index – Lista alla förare
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> Index(string searchString)
         {
-            var drivers = await _context.Drivers.ToListAsync();
-            return View(drivers);
+            var drivers = from d in _context.Drivers
+                          select d;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                drivers = drivers.Where(s => s.DriverName.Contains(searchString));
+            }
+
+            return View(await drivers.ToListAsync());
         }
 
         // GET: Driver/Create – Visa formulär för att skapa ny förare
@@ -125,6 +133,26 @@ namespace InfoSystem_Drivers_U3.Controllers
             _context.Drivers.Remove(driver);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var driver = await _context.Drivers
+                .Include(d => d.Events)
+                .FirstOrDefaultAsync(m => m.DriverID == id);
+
+            if (driver == null)
+            {
+                return NotFound();
+            }
+
+            return View(driver);
         }
     }
 }
