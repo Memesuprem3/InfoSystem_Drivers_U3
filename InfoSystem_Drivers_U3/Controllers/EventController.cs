@@ -2,7 +2,9 @@
 using InfoSystem_Drivers_U3.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace InfoSystem_Drivers_U3.Controllers
 {
@@ -28,7 +30,6 @@ namespace InfoSystem_Drivers_U3.Controllers
                 return NotFound();
             }
 
-            // Filtrera händelser baserat på start- och slutdatum
             var events = driver.Events.AsQueryable();
             if (startDate.HasValue)
             {
@@ -39,36 +40,39 @@ namespace InfoSystem_Drivers_U3.Controllers
                 events = events.Where(e => e.NoteDate <= endDate.Value);
             }
 
-            // Sätt värden till ViewBag så de kan användas i vyn
             ViewBag.StartDate = startDate?.ToString("yyyy-MM-dd");
             ViewBag.EndDate = endDate?.ToString("yyyy-MM-dd");
-
             ViewBag.DriverName = driver.DriverName;
             ViewBag.DriverId = driver.DriverID;
+
             return View(events.ToList());
         }
 
-        // GET: Event/Create – Visa formulär för att skapa ny händelse
-        public IActionResult Create(int driverId)
+        // GET: Event/Create – Visa formulär för att skapa ny händelse för specifik förare
+        public IActionResult Create()
         {
-            ViewBag.DriverId = driverId;
+            ViewBag.DriverList = new SelectList(_context.Drivers, "DriverID", "DriverName");
             return View();
         }
 
-        // POST: Event/Create – Lägg till ny händelse för specifik förare
+        // POST: Event/Create – Lägg till ny händelse för specifik förare i databasen
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int driverId, Event newEvent)
         {
             if (ModelState.IsValid)
             {
+                newEvent.NoteDate = DateTime.Now;
                 newEvent.DriverID = driverId;
                 _context.Add(newEvent);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", new { driverId = driverId });
+
+                return User.IsInRole("Admin")
+                    ? RedirectToAction("AdminOverview", "Employee")
+                    : RedirectToAction("DriverOverview", "Employee");
             }
 
-            ViewBag.DriverId = driverId;
+            ViewBag.DriverList = new SelectList(_context.Drivers, "DriverID", "DriverName", driverId);
             return View(newEvent);
         }
 
@@ -80,17 +84,20 @@ namespace InfoSystem_Drivers_U3.Controllers
                 return NotFound();
             }
 
-            var eventToEdit = await _context.Events.FindAsync(id);
+            var eventToEdit = await _context.Events
+                .Include(e => e.Driver)
+                .FirstOrDefaultAsync(e => e.EventID == id);
+
             if (eventToEdit == null)
             {
                 return NotFound();
             }
 
-            ViewBag.DriverId = eventToEdit.DriverID;
+            ViewBag.DriverList = new SelectList(_context.Drivers, "DriverID", "DriverName", eventToEdit.DriverID);
             return View(eventToEdit);
         }
 
-        // POST: Event/Edit/5 – Uppdatera händelse i databasen
+        // POST: Event/Edit/5 – Uppdatera händelse i databasen och omdirigera
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Event eventToUpdate)
@@ -102,30 +109,18 @@ namespace InfoSystem_Drivers_U3.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(eventToUpdate);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Events.Any(e => e.EventID == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Index", new { driverId = eventToUpdate.DriverID });
+                _context.Update(eventToUpdate);
+                await _context.SaveChangesAsync();
+
+                return User.IsInRole("Admin")
+                    ? RedirectToAction("AdminOverview", "Employee")
+                    : RedirectToAction("DriverOverview", "Employee");
             }
 
-            ViewBag.DriverId = eventToUpdate.DriverID;
+            ViewBag.DriverList = new SelectList(_context.Drivers, "DriverID", "DriverName", eventToUpdate.DriverID);
             return View(eventToUpdate);
         }
 
-        // GET: Event/Delete/5 – Visa bekräftelse för att ta bort händelse
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,7 +139,6 @@ namespace InfoSystem_Drivers_U3.Controllers
             return View(eventToDelete);
         }
 
-        // POST: Event/Delete/5 – Ta bort händelse från databasen
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -153,13 +147,13 @@ namespace InfoSystem_Drivers_U3.Controllers
             var driverId = eventToDelete.DriverID;
             _context.Events.Remove(eventToDelete);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index", new { driverId = driverId });
         }
 
         [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> GetNotifications(string driverName, string employeeName, DateTime? startDate, DateTime? endDate)
         {
-            // Ändra timespan till 7 dagar (1 vecka)
             TimeSpan timeSpan = TimeSpan.FromDays(7);
             DateTime cutoffTime = DateTime.Now.Subtract(timeSpan);
 
@@ -189,6 +183,5 @@ namespace InfoSystem_Drivers_U3.Controllers
 
             return View(await events.ToListAsync());
         }
-
     }
 }

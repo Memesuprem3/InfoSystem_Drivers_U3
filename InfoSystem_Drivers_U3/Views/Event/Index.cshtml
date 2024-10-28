@@ -1,45 +1,37 @@
-﻿@model IEnumerable<InfoSystem_Drivers_U3.Models.Event>
+﻿@model IEnumerable<InfoSystem_Drivers_U3.Models.Driver>
 
-<h2>Händelser för förare</h2>
+<h2>Förare</h2>
 
-<!-- Datumfilter formulär -->
 <form method="get" asp-action="Index">
-    <input type="hidden" name="driverId" value="@ViewBag.DriverId" />
-
-    <div>
-        <label for="startDate">Från:</label>
-        <input type="date" name="startDate" value="@ViewBag.StartDate" />
-
-        <label for="endDate">Till:</label>
-        <input type="date" name="endDate" value="@ViewBag.EndDate" />
-
-        <button type="submit" class="btn btn-primary">Filtrera</button>
+    <div class="form-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Sök efter förarnamn" />
+        <button type="submit" class="btn btn-primary mt-2">Sök</button>
     </div>
 </form>
 
-<!-- Tabell för att visa filtrerade händelser -->
 <table class="table">
-    <tr>
-        <th>Datum</th>
-        <th>Beskrivning</th>
-        <th>Belopp In</th>
-        <th>Belopp Ut</th>
-        <th>Åtgärder</th>
-    </tr>
-    @foreach (var eventItem in Model)
-    {
+    <thead>
         <tr>
-            <td>@eventItem.NoteDate.ToShortDateString()</td>
-            <td>@eventItem.NoteDescription</td>
-            <td>@eventItem.BeloppIn</td>
-            <td>@eventItem.BeloppUt</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@eventItem.EventID">Redigera</a> |
-                <a asp-action="Delete" asp-route-id="@eventItem.EventID">Ta bort</a>
-            </td>
+            <th>Namn</th>
+            <th>Registreringsnummer</th>
+            <th>Ansvarig</th>
+            <th>Åtgärder</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var driver in Model)
+        {
+            <tr>
+                <td>@driver.DriverName</td>
+                <td>@driver.CarReg</td>
+                <td>@driver.ResponsibleEmployee</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@driver.DriverID" class="btn btn-warning">Redigera</a>
+                    <a asp-action="Delete" asp-route-id="@driver.DriverID" class="btn btn-danger">Ta bort</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<a asp-action="Create" asp-route-driverId="@ViewBag.DriverId" class="btn btn-primary">Lägg till ny händelse</a>
-<a asp-controller="Driver" asp-action="Index" class="btn btn-secondary">Tillbaka till Förarlistan</a>
+<a asp-action="Create" class="btn btn-primary mt-3">Lägg till ny förare</a>

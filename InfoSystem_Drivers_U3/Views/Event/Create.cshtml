@@ -1,0 +1,34 @@
+﻿@model InfoSystem_Drivers_U3.Models.Event
+
+@{
+    ViewData["Title"] = "Lägg till Händelse";
+}
+
+<h2>Lägg till Händelse</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="driverId">Välj Förare:</label>
+        <select asp-for="DriverID" asp-items="ViewBag.DriverList" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NoteDescription" class="control-label">Beskrivning:</label>
+        <input asp-for="NoteDescription" class="form-control" />
+        <span asp-validation-for="NoteDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BeloppIn" class="control-label">Belopp In:</label>
+        <input asp-for="BeloppIn" class="form-control" />
+        <span asp-validation-for="BeloppIn" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BeloppUt" class="control-label">Belopp Ut:</label>
+        <input asp-for="BeloppUt" class="form-control" />
+        <span asp-validation-for="BeloppUt" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Spara Händelse</button>
+</form>
